@@ -17,7 +17,8 @@ def sign(x):
 
 
 def dichotomy(func, a0, b0, epsilon):
-    delta = epsilon / 2
+    count = 0
+    delta = 0.9 * (epsilon / 2)
     a = a0
     b = b0
     while b - a > epsilon:
@@ -33,10 +34,13 @@ def dichotomy(func, a0, b0, epsilon):
             a = x1
             b = x2
         print("a ", a, " b ", b)
+        count += 1
+    print("итераций: ", count)
     return (a + b) / 2
 
 
 def golden_ratio(func, a0, b0, epsilon):
+    count = 0
     a = a0
     b = b0
     x1 = a + (b - a) * (3 - m.sqrt(5)) / 2
@@ -58,10 +62,13 @@ def golden_ratio(func, a0, b0, epsilon):
         else:
             b = x2
         print("a ", a, " b ", b)
+        count += 1
+    print("итераций: ", count)
     return (a + b) / 2
 
 
 def parabola(func, a0, b0, epsilon):
+    count = 0
     a = a0
     b = b0
     fa = func(a0)
@@ -81,7 +88,8 @@ def parabola(func, a0, b0, epsilon):
             b = x2
             fb = f2
         print("a ", a, " b ", b)
-    print("a ", a, " b ", b)
+        count += 1
+    print("итераций: ", count)
     return (a + b) / 2
 
 
@@ -90,10 +98,9 @@ def fibonacci(func, a0, b0, epsilon):
     b = b0
     n = 0
     fn = 0
-    while fn < (b0 - a0) / epsilon:  # computing n
+    while fn <= (b0 - a0) / epsilon:  # computing n
         fn = fib(n + 2)
         n += 1
-    print("n =", n)
     x1 = a + fib(n) / fib(n + 2) * (b - a)  # first iteration
     x2 = a + fib(n + 1) / fib(n + 2) * (b - a)
     f1 = func(x1)
@@ -121,6 +128,7 @@ def fibonacci(func, a0, b0, epsilon):
         else:
             b = x2
         print("a ", a, " b ", b)
+    print("итераций: ", n)
     return (a + b) / 2
 
 
@@ -180,8 +188,6 @@ def combined_Brent(func, a0, b0, epsilon):
             elif (fu < fv) or (v == x) or (v == w):
                 v = u
                 fv = fu
-            else:
-                print("STOP")
         print("a ", a, " b ", b)
     print("a ", a, " b ", b)
     return (a + b) / 2
@@ -190,5 +196,5 @@ def combined_Brent(func, a0, b0, epsilon):
 left = 0
 right = 2 * m.pi
 
-m = combined_Brent(f, left, right, 0.01)
-print(m)
+m = parabola(f, left, right, 0.1)
+print("результат: ", m)
