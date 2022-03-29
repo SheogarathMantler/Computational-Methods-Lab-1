@@ -3,7 +3,8 @@ import math as m
 
 def f(x):
     return m.exp(-x ** 2) * x ** 2 + (1 - m.exp(1) - x ** 2) * m.sin(x)
-
+def g(x):
+    return x*m.sin(10*x)
 
 def fib(n):
     return (((1 + m.sqrt(5)) / 2) ** n - ((1 - m.sqrt(5)) / 2) ** n) / m.sqrt(5)
@@ -133,6 +134,7 @@ def fibonacci(func, a0, b0, epsilon):
 
 
 def combined_Brent(func, a0, b0, epsilon):
+    count = 0
     a = a0
     b = b0
     x = w = v = (a + b) / 2
@@ -188,13 +190,18 @@ def combined_Brent(func, a0, b0, epsilon):
             elif (fu < fv) or (v == x) or (v == w):
                 v = u
                 fv = fu
+            else:
+                print("stop")
+
         print("a ", a, " b ", b)
+        count += 1
     print("a ", a, " b ", b)
+    print("итераций: ", count)
     return (a + b) / 2
 
 
-left = 0
-right = 2 * m.pi
+left = 1
+right = 5
 
-m = parabola(f, left, right, 0.1)
+m = combined_Brent(g, left, right, 0.01)
 print("результат: ", m)
