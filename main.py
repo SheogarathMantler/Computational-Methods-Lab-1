@@ -133,40 +133,41 @@ def fibonacci(func, a0, b0, epsilon):
     return (a + b) / 2
 
 
-def combined_Brent(func, a0, b0, epsilon):
-    count = 0
-    a = a0
-    b = b0
-    x = w = v = (a + b) / 2
-    fx = fw = fv = func(x)
-    k = (3-m.sqrt(5))/2
+def combined_Brent(func, a, b, epsilon):
+    g_ratio = (1 + m.sqrt(5)) / 2
+    number_of_iterations = 1
+    x = v = w = (a+b)/2
+    fx = fw = fv = f(x)
     d = e = b - a
-    while abs(b - a) > epsilon:
+    while True:
+        print(number_of_iterations)
+        number_of_iterations += 1
         g = e
+        u = -1
         e = d
-        if (x != w) and (w != v) and (x != v) and (fx != fw) and (fw != fv) and (fv != fx):  # если точки разные
-            u = x - (((x - w) ** 2 * (fx - fv) - (x - v) ** 2 * (fv - fw)) / (
-                    (x - w) * (fx - fv) - (x - v) * (fx - fw))) / 2
-            if (u >= a + epsilon) and (u <= b - epsilon) and (abs(u - x) < g/2):
-                d = abs(u - x)
-            else:    # если не выполнено условие то золотое сечение
-                if x < (b - a) / 2:
-                    u = x + k * (b - x)
-                    d = b - x
-                else:
-                    u = x - k * (x - a)
-                    d = x - a
-        else:        # если не выполнено условие то золотое сечение
-            if x < (b - a)/2:
-                u = x + k*(b - x)
+        if x != v and x != w and w != v and fx != fv and fx != fw and fv != fw:  # если точки разные
+            if w > v:
+                a1 = (fx - fv) / (x - v)
+                a2 = ((fw - fv) / (w - v) - (fx - fv) / (x - v)) / (w - x)
+                u = (v + x - (a1 / a2)) / 2
+            else:
+                a1 = (fx - fw) / (x - w)
+                a2 = ((fv - fw) / (v - w) - (fx - fw) / (x - w)) / (v - x)
+                u = (w + x - (a1 / a2)) / 2
+        if u - a > epsilon and u < b - epsilon and abs(u - x) < g / 2:
+            d = abs(u - x)
+        else:  # если не выполнено условие то золотое сечение
+            if x < (b - a) / 2:
+                u = x + (b - x) / g_ratio
                 d = b - x
             else:
-                u = x - k*(x - a)
+                u = x - (x - a) / g_ratio
                 d = x - a
         if abs(u - x) < epsilon:
-            u = x + sign(u - x)*epsilon
+            print("итераций: ", number_of_iterations)
+            return u
         fu = func(u)
-        if fu <= fx:
+        if fu < fx:
             if u >= x:
                 a = x
             else:
@@ -178,26 +179,18 @@ def combined_Brent(func, a0, b0, epsilon):
             fw = fx
             fx = fu
         else:
-            if u > x:
+            if u >= x:
                 b = u
             else:
                 a = u
-            if (fu < fw) or (w == x):
+            if fu <= fw or w == x:
                 v = w
                 w = u
                 fv = fw
                 fw = fu
-            elif (fu < fv) or (v == x) or (v == w):
+            elif fu <= fv or v == x or v == w:
                 v = u
                 fv = fu
-            else:
-                print("stop")
-
-        print("a ", a, " b ", b)
-        count += 1
-    print("a ", a, " b ", b)
-    print("итераций: ", count)
-    return (a + b) / 2
 
 
 left = 1
